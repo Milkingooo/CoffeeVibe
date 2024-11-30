@@ -1,0 +1,37 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">CoffeeVibe</string>
+    <string name="welcome_back">Добро пожаловать</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="account">Аккаунт</string>
+    <string name="home">Домашняя</string>
+    <string name="menu">Меню</string>
+    <string name="order">Заказ</string>
+    <string name="coffee">Кофе</string>
+    <string name="tea">Чай</string>
+    <string name="desserts">Десерты</string>
+    <string name="sandwiches">Сэндвичи</string>
+    <string name="items">Товары</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="log_in">Войти</string>
+    <string name="new_user_sign_up">Новый пользователь? Зарегистрироваться</string>
+    <string name="password">Пароль</string>
+    <string name="email">Почта</string>
+    <string name="create_an_account">Создать аккаунт</string>
+    <string name="first_name">Имя</string>
+    <string name="by_continuing_you_agree_to_our_terms_of_service_and_privacy_policy">Продолжая, вы соглашаетесь с нашими условиями пользования и политикой конфиденциальности</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="log_out">Выйти</string>
+    <string name="total">Всего</string>
+    <string name="place_order">Сделать заказ</string>
+    <string name="settings">Настройки</string>
+    <string name="get_help">Поддержка</string>
+    <string name="about_us">О Нас</string>
+    <string name="call_us_n_8_800_555_35_35" tools:ignore="TypographyDashes">Позвоните нам \n 8–800-555-35-35</string>
+    <string name="email_us_n_savevibe_gmail_com">Напишите нам \n savevibe@gmail.com</string>
+    <string name="notifications">Уведомления</string>
+    <string name="account_management">Настройки аккаунта</string>
+    <string name="theme">Темы</string>
+    <string name="language">Язык</string>
+    <string name="already_registered_sign_in">Уже зарегистрированны? Войти</string>
+    <string name="admin">Админ</string>
+</resources>

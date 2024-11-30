@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Fragments.AccountFragment">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/account"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        android:textSize="30sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/raleway_extrabold"/>
+
+
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="20sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/raleway_extrabold"
+        android:layout_gravity="center_horizontal"
+        android:text=""
+        android:layout_marginBottom="50dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/AccountItems"
+        android:id="@+id/settingsButton"
+        android:text="@string/settings" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/getHelpButton"
+        style="@style/AccountItems"
+        android:text="@string/get_help"
+        />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/aboutButton"
+        android:text="@string/about_us"
+        style="@style/AccountItems"
+        />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logoutButton"
+        style="@style/ButtonAccount"
+        android:text="@string/log_out"
+        android:visibility="gone"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        style="@style/ButtonAccount"
+        android:text="@string/log_in" />
+
+
+
+</LinearLayout>

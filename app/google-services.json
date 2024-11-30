@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "47867818058",
+    "project_id": "eshkere-1",
+    "storage_bucket": "eshkere-1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:47867818058:android:ab8db9ac5b505a69e0f6b3",
+        "android_client_info": {
+          "package_name": "com.example.coffeevibe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "47867818058-bg6eun9ok0umsgdsn7qha2j3nk0fgrlk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.coffeevibe",
+            "certificate_hash": "efc5ed2064031db9c140e6bc1bef52b38ced9d4e"
+          }
+        },
+        {
+          "client_id": "47867818058-nb7lr6qnlfnnen57nbf7dvl32i4nseo8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDNBQrMqfMdc8J3uxHYYFDlWdGoYgGp39E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "47867818058-nb7lr6qnlfnnen57nbf7dvl32i4nseo8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
