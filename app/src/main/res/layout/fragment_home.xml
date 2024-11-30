@@ -19,6 +19,7 @@
         android:textSize="30sp"/>
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="#0000FFFF">

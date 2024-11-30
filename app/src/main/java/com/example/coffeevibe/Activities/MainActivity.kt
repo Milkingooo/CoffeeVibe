@@ -1,6 +1,7 @@
 package com.example.coffeevibe.Activities
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -16,12 +17,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeevibe.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -33,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     private val auth = FirebaseAuth.getInstance()
     private val db = Firebase.firestore
 
+
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -63,16 +70,16 @@ class MainActivity : AppCompatActivity() {
             createNotificationChannel()
         }
 
+
     }
     private fun findUserInFirestore(email: String) {
         try {
-            var pass = ""
-            db.collection("user")
+            db.collection("admin")
                 .whereEqualTo("email", email)
                 .get()
                 .addOnSuccessListener {
                     for (document in it) {
-                        pass = document.getString("password").toString().trim()
+                        val pass = document.getString("password").toString().trim()
                         if (auth.currentUser != null) {
                             onLoginAdmin(email = auth.currentUser!!.email.toString(), password = pass)
                         }
