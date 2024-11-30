@@ -36,4 +36,6 @@
     <string name="language">Language</string>
     <string name="already_registered_sign_in">Already registered? Sign in</string>
     <string name="admin">Admin</string>
+    <string name="admin_panel">Admin Panel</string>
+    <string name="users">Users</string>
 </resources>

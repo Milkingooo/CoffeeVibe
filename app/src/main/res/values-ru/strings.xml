@@ -34,4 +34,6 @@
     <string name="language">Язык</string>
     <string name="already_registered_sign_in">Уже зарегистрированны? Войти</string>
     <string name="admin">Админ</string>
+    <string name="admin_panel">Административная панель</string>
+    <string name="users">Сотрудники</string>
 </resources>

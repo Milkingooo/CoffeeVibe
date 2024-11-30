@@ -7,8 +7,10 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -20,11 +22,16 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.coffeevibe.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private val REQUEST_CODE_POST_NOTIFICATIONS = 1
     private val CHANNEL_ID = "channel_id"
+    private val auth = FirebaseAuth.getInstance()
+    private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
 
+        findUserInFirestore(auth.currentUser?.email.toString()).toString()
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_CODE_POST_NOTIFICATIONS)
@@ -54,6 +63,61 @@ class MainActivity : AppCompatActivity() {
             createNotificationChannel()
         }
 
+    }
+    private fun findUserInFirestore(email: String) {
+        try {
+            var pass = ""
+            db.collection("user")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnSuccessListener {
+                    for (document in it) {
+                        pass = document.getString("password").toString().trim()
+                        if (auth.currentUser != null) {
+                            onLoginAdmin(email = auth.currentUser!!.email.toString(), password = pass)
+                        }
+                        break
+                    }
+                }
+                .addOnFailureListener {
+                    Log.d("AccountFragment", "User is not found")
+                }
+        } catch (e: Exception) {
+            Log.d("AccountFragment", "findUserInFirestore: $e")
+        }
+
+    }
+
+    fun onLoginAdmin(email: String, password: String) {
+        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        if(email == "admin@bk.ru" && password == "adminadmin") {
+            editor.putBoolean("isAdmin", true)
+        }
+        else {
+            editor.putBoolean("isAdmin", false)
+        }
+        editor.apply()
+        updateNavUi()
+    }
+
+    private fun updateNavUi(){
+        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+        val isAdmin = sharedPreferences.getBoolean("isAdmin", false)
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        val menu = bottomNavigationView.menu
+
+        if(isAdmin) {
+            if(menu.findItem(R.id.adminFragment) == null) {
+                menu.add(0, R.id.adminFragment, menu.size(), "Admin")
+                    .setIcon(R.drawable.baseline_admin_panel_settings_24)
+            }
+            else {
+                menu.removeItem(R.id.adminFragment)
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
