@@ -4,5 +4,5 @@ import androidx.fragment.app.Fragment
 import com.example.coffeevibe.R
 
 class AdminFragment : Fragment(R.layout.fragment_home) {
-
+    //TODO: Rename parameter arguments, choose names that match
 }
