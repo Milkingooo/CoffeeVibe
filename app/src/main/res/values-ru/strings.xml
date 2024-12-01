@@ -36,4 +36,7 @@
     <string name="admin">Админ</string>
     <string name="admin_panel">Административная панель</string>
     <string name="users">Сотрудники</string>
+    <string name="users_management">Администраторы</string>
+    <string name="add_new_item">Добавить новую позицию</string>
+    <string name="remove_item">Убрать позицию</string>
 </resources>

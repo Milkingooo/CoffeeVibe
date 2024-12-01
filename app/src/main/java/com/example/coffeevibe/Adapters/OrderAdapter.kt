@@ -101,7 +101,7 @@ class OrderAdapter(private val items: MutableList<MenuItem>, val onItemQuantityC
         notifyDataSetChanged()
     }
 
-    fun extractPrice(priceStr: String) : Int{
+    private fun extractPrice(priceStr: String) : Int{
         val regex = "\\d+".toRegex()
 
         val matchResult = regex.find(priceStr)

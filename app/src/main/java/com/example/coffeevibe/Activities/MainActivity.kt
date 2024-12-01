@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -24,6 +25,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.example.coffeevibe.Fragments.AdminFragment
 import com.example.coffeevibe.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
@@ -70,9 +72,8 @@ class MainActivity : AppCompatActivity() {
             createNotificationChannel()
         }
 
-
     }
-    private fun findUserInFirestore(email: String) {
+            private fun findUserInFirestore(email: String) {
         try {
             db.collection("admin")
                 .whereEqualTo("email", email)

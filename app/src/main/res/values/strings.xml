@@ -38,4 +38,7 @@
     <string name="admin">Admin</string>
     <string name="admin_panel">Admin Panel</string>
     <string name="users">Users</string>
+    <string name="users_management">Users management</string>
+    <string name="add_new_item">Add New Item</string>
+    <string name="remove_item">Remove Item</string>
 </resources>
