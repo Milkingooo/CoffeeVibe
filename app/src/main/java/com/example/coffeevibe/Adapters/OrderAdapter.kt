@@ -88,7 +88,7 @@ class OrderAdapter(private val items: MutableList<MenuItem>, val onItemQuantityC
     }
 
     fun deleteItem(position: Int){
-        if (position in 0..items.size){
+        if (position in 0 until items.size){
             items.removeAt(position)
             notifyDataSetChanged()
             notifyItemRangeChanged(position, items.size)

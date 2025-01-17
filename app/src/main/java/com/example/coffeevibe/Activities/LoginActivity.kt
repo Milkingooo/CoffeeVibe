@@ -1,13 +1,8 @@
 package com.example.coffeevibe.Activities
 
-import android.Manifest
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
+import android.os.NetworkOnMainThreadException
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
@@ -15,17 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.coffeevibe.R
-import com.google.android.gms.common.ConnectionResult
-import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -34,43 +23,56 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         enableEdgeToEdge()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
         auth = FirebaseAuth.getInstance()
+        setupListeners()
+    }
 
-//        if (auth.currentUser != null) {
-//            startActivity(Intent(this, MainActivity::class.java))
-//            finish()
-//        }
-
+    private fun setupListeners() {
         findViewById<TextView>(R.id.textView5).setOnClickListener {
-            startActivity(Intent(this, RegActivity::class.java))
-            finish()
+            navigateToRegistration()
         }
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            val email = findViewById<EditText>(R.id.editTextEmail)
-            val password = findViewById<EditText>(R.id.editTextTextPassword)
+            val email = findViewById<EditText>(R.id.editTextEmail).text.toString().trim()
+            val password = findViewById<EditText>(R.id.editTextTextPassword).text.toString().trim()
 
-            if (checkInputInfo(email.text.toString().trim(), password.text.toString().trim())) {
-                signIn(email.text.toString().trim(), password.text.toString().trim())
+            if (validateInput(email, password)) {
+                signIn(email, password)
             } else {
-                Log.d("Login", "Login failed 2")
+                Log.d("Login", "Validation failed")
             }
+        }
+        findViewById<TextView>(R.id.textView2).setOnClickListener {
+            resetPassword()
         }
     }
 
+    private fun resetPassword() {
+        val email = findViewById<EditText>(R.id.editTextEmail).text.toString().trim()
 
-    private fun checkInputInfo(phone: String, password: String) : Boolean {
-        if (phone.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-            return false
+        if (email.isEmpty()) {
+            showToast("Please enter your email")
+            return
+        } else {
+            auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        showToast(getString(R.string.password_reset_email_sent))
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    showToast("Failed to send password reset email")
+                    Log.e("FirebaseAuth", "Failed to send password reset email", exception)
+                }
         }
-        else {
-            return true
+    }
+
+    fun validateInput(email: String, password: String): Boolean {
+        return if (email.isEmpty() || password.isEmpty()) {
+            showToast("Please fill all fields")
+            false
+        } else {
+            true
         }
     }
 
@@ -78,18 +80,50 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Успешный вход
                     Log.d("FirebaseAuth", "Sign-in successful, user: ${auth.currentUser}")
-                    startActivity(Intent(this, MainActivity::class.java))
+                    navigateToMain()
                 } else {
-                    // Ошибка входа
-                    if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        Log.e("FirebaseAuth", "Invalid credentials: ${task.exception?.message}")
-                    } else {
-                        Log.e("FirebaseAuth", "Sign-in failed", task.exception)
-                        Toast.makeText(this, "Sign-in failed", Toast.LENGTH_SHORT).show()
-                    }
+                    handleSignInError(task.exception)
                 }
             }
+            .addOnFailureListener(this) { exception ->
+                if (exception is NetworkOnMainThreadException) {
+                    showToast("Ошибка соединения")
+                } else {
+                    handleSignInError(exception)
+                }
+            }
+    }
+
+    fun handleSignInError(exception: Exception?) {
+        when (exception) {
+            is FirebaseAuthInvalidCredentialsException -> {
+                Log.e("FirebaseAuth", "Invalid credentials: ${exception.message}")
+                showToast("Неверная почта или пароль!")
+            }
+
+            is NetworkOnMainThreadException -> {
+                showToast("Ошибка соединения")
+            }
+
+            else -> {
+                Log.e("FirebaseAuth", "Sign-in failed", exception)
+                showToast("Ошибка авторизации")
+            }
+        }
+    }
+
+    private fun navigateToRegistration() {
+        startActivity(Intent(this, RegActivity::class.java))
+        finish()
+    }
+
+    private fun navigateToMain() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

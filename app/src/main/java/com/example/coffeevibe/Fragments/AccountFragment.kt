@@ -10,11 +10,13 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.MainThread
+import androidx.appcompat.app.AppCompatDelegate
 import com.example.coffeevibe.Activities.AboutUsActivity
+import com.example.coffeevibe.Activities.AccountManageActivity
 import com.example.coffeevibe.Activities.GetHelpActivity
 import com.example.coffeevibe.Activities.LoginActivity
-import com.example.coffeevibe.Activities.SettingsActivity
 import com.example.coffeevibe.R
+import com.google.android.material.switchmaterial.SwitchMaterial
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.firestore
@@ -29,18 +31,21 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
         val logoutButton = view.findViewById<Button>(R.id.logoutButton)
         val loginButton = view.findViewById<Button>(R.id.loginButton)
-        val settImage = view.findViewById<Button>(R.id.settingsButton)
         val aboutUsButton = view.findViewById<Button>(R.id.aboutButton)
         val getHelpButton = view.findViewById<Button>(R.id.getHelpButton)
+        val accManageButton = view.findViewById<Button>(R.id.accManageButton)
+        val themeSwitcher = view.findViewById<SwitchMaterial>(R.id.themeSwitcher)
 
         if (currentUser == null) {
             loginButton.visibility = View.VISIBLE
             logoutButton.visibility = View.GONE
+            accManageButton.visibility = View.GONE
         }
         else {
             loginButton.visibility = View.GONE
             logoutButton.visibility = View.VISIBLE
             findUserInFirestore(currentUser?.email.toString())
+            accManageButton.visibility = View.VISIBLE
         }
 
         logoutButton.setOnClickListener {
@@ -50,12 +55,6 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
 
         loginButton.setOnClickListener {
             startActivity(Intent(activity, LoginActivity::class.java))
-
-        }
-
-        settImage.setOnClickListener{
-            val intent = Intent(requireContext(), SettingsActivity::class.java)
-            startActivity(intent)
         }
 
         aboutUsButton.setOnClickListener{
@@ -66,6 +65,19 @@ class AccountFragment : Fragment(R.layout.fragment_account) {
         getHelpButton.setOnClickListener{
             val intent = Intent(requireContext(), GetHelpActivity::class.java)
             startActivity(intent)
+        }
+
+        accManageButton.setOnClickListener{
+            startActivity(Intent(requireContext(), AccountManageActivity::class.java))
+        }
+
+        themeSwitcher.setOnCheckedChangeListener { _, isChecked ->
+            if (!isChecked) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
         }
     }
 

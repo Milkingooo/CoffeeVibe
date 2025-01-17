@@ -1,5 +1,6 @@
 package com.example.coffeevibe.Adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,7 @@ class UsersAdapter(private val users: MutableList<User>): RecyclerView.Adapter<U
         holder.email.text = user.email
 
         holder.delete.setOnClickListener {
-            Toast.makeText(holder.itemView.context, "Deleted", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(holder.itemView.context, "Deleted", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -34,5 +35,12 @@ class UsersAdapter(private val users: MutableList<User>): RecyclerView.Adapter<U
         val email = itemView.findViewById<TextView>(R.id.textViewEmail)
 
         val delete = itemView.findViewById<ImageButton>(R.id.delBtn)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(users: MutableList<User>){
+        this.users.clear()
+        this.users.addAll(users)
+        notifyDataSetChanged()
     }
 }

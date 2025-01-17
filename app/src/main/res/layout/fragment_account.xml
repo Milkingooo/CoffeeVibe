@@ -5,35 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".Fragments.AccountFragment">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/account"
-        android:layout_marginTop="15dp"
-        android:gravity="center_horizontal"
-        android:textSize="30sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/raleway_extrabold"/>
-
+        style="@style/Account"
+        android:text="@string/account" />
 
     <TextView
         android:id="@+id/textViewName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:fontFamily="@font/raleway_extrabold"
-        android:layout_gravity="center_horizontal"
-        android:text=""
-        android:layout_marginBottom="50dp"/>
+        style="@style/AccountName" />
 
     <com.google.android.material.button.MaterialButton
         style="@style/AccountItems"
-        android:id="@+id/settingsButton"
-        android:text="@string/settings" />
+        android:id="@+id/accManageButton"
+        android:text="@string/account_management"
+        />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/getHelpButton"
@@ -47,6 +34,28 @@
         style="@style/AccountItems"
         />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/themeButton"
+            style="@style/AccountItems"
+            android:layout_width="300dp"
+            android:layout_margin="0dp"
+            android:text="@string/dark_theme" />
+
+        <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/themeSwitcher"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:layout_marginEnd="20dp" />
+
+    </LinearLayout>
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/logoutButton"
@@ -58,7 +67,5 @@
         android:id="@+id/loginButton"
         style="@style/ButtonAccount"
         android:text="@string/log_in" />
-
-
 
 </LinearLayout>

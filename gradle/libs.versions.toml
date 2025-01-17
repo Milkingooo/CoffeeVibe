@@ -26,6 +26,13 @@ firebaseStorageKtx = "21.0.1"
 compiler = "5.0.0-rc01"
 coreSplashscreen = "1.2.0-alpha02"
 preference = "1.2.1"
+junitJupiter = "5.8.1"
+robolectric = "4.14.1"
+core = "1.46.0"
+junitJunit = "4.12"
+junitKtx = "1.2.1"
+coreVersion = "1.6.1"
+mockk = "1.13.13"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +59,13 @@ firebase-storage-ktx = { group = "com.google.firebase", name = "firebase-storage
 compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "compiler" }
 androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "coreSplashscreen" }
 androidx-preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+core = { group = "com.google.ar", name = "core", version.ref = "core" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
+androidx-junit-ktx = { group = "androidx.test.ext", name = "junit-ktx", version.ref = "junitKtx" }
+androidx-core = { group = "androidx.test", name = "core", version.ref = "coreVersion" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

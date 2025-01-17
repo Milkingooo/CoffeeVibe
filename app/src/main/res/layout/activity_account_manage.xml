@@ -5,50 +5,30 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.AddItemActivity"
+    android:background="@color/white"
     android:orientation="vertical"
-    android:background="@color/white">
+    tools:context=".Activities.AccountManageActivity">
 
     <TextView
         style="@style/Account"
         android:layout_marginBottom="20dp"
-        android:text="@string/add_new_item"
+        android:text="@string/account"
         android:textSize="20sp"
         />
 
     <EditText
-        android:id="@+id/editTextName"
+        android:id="@+id/editTextNameAcc"
         style="@style/EditTextWithLabelStyle"
-        android:hint="@string/enter_item_name"/>
+        android:hint="@string/change_your_name"/>
+
+
 
     <EditText
-        android:id="@+id/editTextCategory"
+        android:id="@+id/editTextPassword"
         style="@style/EditTextWithLabelStyle"
-        android:hint="@string/enter_item_category"/>
-
-    <EditText
-        android:id="@+id/editTextPrice"
-        style="@style/EditTextWithMoneyStyle"
-        android:hint="@string/enter_item_price"
-        android:inputType="numberDecimal"/>
-
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/imageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        app:srcCompat="@drawable/brff"
-        android:layout_gravity="center"/>
-
-    <com.google.android.material.button.MaterialButton
-        android:visibility="gone"
-        android:id="@+id/imageBtn"
-        style="@style/ButtonAccount"
-        android:text="Add image"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="0dp"
-        android:backgroundTint="#BFBDBD"/>
+        android:hint="@string/change_your_password"
+        android:inputType="textPassword"
+        android:drawableEnd="@drawable/baseline_password_24"/>
 
 
     <LinearLayout
@@ -61,7 +41,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelBtn"
             style="@style/ButtonAccount"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_marginBottom="0dp"

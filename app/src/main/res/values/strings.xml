@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CoffeeVibe</string>
     <string name="welcome_back">Welcome back</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -28,7 +28,7 @@
     <string name="settings">Settings</string>
     <string name="get_help">Get Help</string>
     <string name="about_us">About Us</string>
-    <string name="call_us_n_8_800_555_35_35">Call us \n 8-800-555-35-35</string>
+    <string name="call_us_n_8_800_555_35_35" tools:ignore="TypographyDashes">Call us \n 8–928-471-21-33</string>
     <string name="email_us_n_savevibe_gmail_com">Email us \n savevibe@gmail.com</string>
     <string name="notifications">Notifications</string>
     <string name="account_management">Account management</string>
@@ -44,4 +44,18 @@
     <string name="enter_item_name">Enter item name</string>
     <string name="enter_item_category">Enter item category</string>
     <string name="enter_item_price">Enter item price</string>
+    <string name="order_create">Order is placed, please wait! \nTotal price: </string>
+    <string name="dark_theme">Dark Theme</string>
+    <string name="change_your_name">Change your name</string>
+    <string name="change_your_password">Change your password</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="add_new_admin">Add New Admin</string>
+    <string name="enter_admin_name">Enter admin name</string>
+    <string name="enter_admin_email">Enter admin email</string>
+    <string name="password_reset_email_sent">Password reset email sent</string>
+    <string name="you_are_registered">You are registered!</string>
+    <string name="email_already_exists">Email already exists!</string>
+    <string name="authentication_failed">Authentication failed.</string>
+    <string name="email_is_too_short_minimum_length_is_8">Password is too short!, minimum length is 8</string>
 </resources>

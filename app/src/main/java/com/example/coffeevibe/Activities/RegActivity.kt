@@ -16,53 +16,29 @@ import androidx.lifecycle.lifecycleScope
 import androidx.transition.Visibility
 import com.example.coffeevibe.R
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class RegActivity : AppCompatActivity() {
-    private val bd = Firebase.firestore
-    private val auth = Firebase.auth
+    private lateinit var db: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContentView(R.layout.activity_reg)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        try {
-            findViewById<Button>(R.id.button2).setOnClickListener {
-                val name = findViewById<EditText>(R.id.editTextText)
-                val password = findViewById<EditText>(R.id.editTextTextPassword2)
-                val email = findViewById<EditText>(R.id.editTextTextEmailAddress)
+        enableEdgeToEdge()
+        db = Firebase.firestore
+        auth = FirebaseAuth.getInstance()
+        setupListeners()
+    }
 
-                lifecycleScope.launch {
-                    if (checkForNull(
-                            name.text.toString(),
-                            password.text.toString(),
-                            email.text.toString()
-                        )
-                        && checkForEmail(email.text.toString())
-                    ) {
-                        signUp(
-                            email.text.toString(),
-                            password.text.toString(),
-                            name.text.toString()
-                        )
-                        Log.d("Register", "Success")
-                    } else {
-                        Log.d("Register", "Error")
-                    }
-                }
-
-            }
-        } catch (e: Exception) {
-            Log.d("Register", "Error main: ${e.message}")
+    private fun setupListeners() {
+        findViewById<Button>(R.id.button2).setOnClickListener {
+            handleRegister()
         }
 
         findViewById<TextView>(R.id.textView5).setOnClickListener {
@@ -71,67 +47,82 @@ class RegActivity : AppCompatActivity() {
         }
     }
 
-    private fun checkForNull(name: String, password: String, email: String): Boolean {
-        if (name.isEmpty() || password.isEmpty() || email.isEmpty()) {
-            Log.d("Register", "Empty fields!")
-            Toast.makeText(this, "Fill all fields!", Toast.LENGTH_SHORT).show()
-            return false
-        } else {
-            Log.d("Register", "All fields filled!")
-            return true
+    private fun handleRegister() {
+        val name = findViewById<EditText>(R.id.editTextText).text.toString()
+        val password = findViewById<EditText>(R.id.editTextTextPassword2).text.toString()
+        val email = findViewById<EditText>(R.id.editTextTextEmailAddress).text.toString()
+
+        lifecycleScope.launch {
+            if (validateInput(name, password, email) && isEmailAvailable(email)) {
+                signUp(email, password, name)
+            } else {
+                Log.d("Register", "Validation failed or email exists")
+            }
         }
     }
 
-    private fun saveUserToDatabase(name: String, password: String, email: String) {
-        try {
-            val user = hashMapOf(
-                "name" to name,
-                "password" to password,
-                "email" to email,
-                "loyality_points" to 0
-            )
-            bd.collection("user")
-                .add(user)
-                .addOnSuccessListener {
-                    Log.d("Register", "User added with ID: ${it.id}")
-                }
-                .addOnFailureListener {
-                    Log.w("Register", "Error adding document", it)
-                }
-        } catch (e: Exception) {
-            Log.d("Register", "Error: ${e.message}")
+    fun validateInput(name: String, password: String, email: String): Boolean {
+        if (name.isBlank() || password.isBlank() || email.isBlank()) {
+            showToast("Fill all fields!")
+            return false
+        }
+        if(password.length < 8){
+            showToast(getString(R.string.email_is_too_short_minimum_length_is_8))
+            return false
+        }
+        else {
+            return true
         }
     }
 
     private fun signUp(email: String, password: String, name: String) {
         auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
+            .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    saveUserToDatabase(name, password, email)
-                    Log.d("Register", "createUserWithEmail:success")
-                    Toast.makeText(this, "You are registered!", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
+                    saveUserToDatabase(name, email, password)
+                    navigateToMain()
+                } else {
+                    showToast(getString(R.string.authentication_failed))
                 }
             }
             .addOnFailureListener {
-                Log.d("Register", "createUserWithEmail:failure", it)
-                Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show()
+                Log.e("Register", "Error during registration", it)
             }
     }
 
-    private suspend fun checkForEmail(email: String): Boolean {
+    private fun saveUserToDatabase(name: String, email: String, password: String) {
+        val user = mapOf(
+            "id" to (auth.currentUser?.uid ?: ""),
+            "name" to name,
+            "password" to password,
+            "email" to email,
+            "loyalty_points" to 0
+        )
+        db.collection("user").add(user)
+            .addOnSuccessListener { Log.d("Register", "User added with ID: ${it.id}") }
+            .addOnFailureListener { Log.e("Register", "Error adding user", it)  }
+    }
+
+    private fun navigateToMain() {
+        showToast(getString(R.string.you_are_registered))
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private suspend fun isEmailAvailable(email: String): Boolean {
         return try {
-            val querySnapshot = bd.collection("user").whereEqualTo("email", email).get().await()
-            if (querySnapshot.isEmpty) {
-                true // email доступен
-            } else {
-                Toast.makeText(this, "Email already exists!", Toast.LENGTH_SHORT).show()
-                false // email уже существует
+            val querySnapshot = db.collection("user").whereEqualTo("email", email).get().await()
+            if (querySnapshot.isEmpty) true else {
+                showToast(getString(R.string.email_already_exists))
+                false
             }
         } catch (e: Exception) {
-            Log.d("Register", "Error checking email")
-            false // произошла ошибка
+            Log.e("Register", "Error checking email availability", e)
+            false
         }
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }

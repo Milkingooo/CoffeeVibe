@@ -1,15 +1,19 @@
 package com.example.coffeevibe.Activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Build.VERSION
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.coffeevibe.R
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class AboutUsActivity : AppCompatActivity() {
     @SuppressLint("MissingInflatedId", "SetTextI18n")
@@ -24,6 +28,10 @@ class AboutUsActivity : AppCompatActivity() {
             insets
         }
 
-        findViewById<TextView>(R.id.versionTv).text = "Version: 0.0.0"
+
+        findViewById<ImageView>(R.id.backImage).setOnClickListener {
+            finish()
+        }
     }
+
 }

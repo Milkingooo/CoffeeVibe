@@ -9,28 +9,22 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.FrameLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.example.coffeevibe.Fragments.AdminFragment
 import com.example.coffeevibe.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.tabs.TabLayout
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity() {
@@ -51,7 +45,10 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        setupFirestoreListener()
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
@@ -60,12 +57,21 @@ class MainActivity : AppCompatActivity() {
         findUserInFirestore(auth.currentUser?.email.toString()).toString()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.POST_NOTIFICATIONS), REQUEST_CODE_POST_NOTIFICATIONS)
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    REQUEST_CODE_POST_NOTIFICATIONS
+                )
             }
         }
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val existingChannel = notificationManager.getNotificationChannel(CHANNEL_ID)
 
         if (existingChannel == null) {
@@ -73,112 +79,44 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-            private fun findUserInFirestore(email: String) {
-        try {
-            db.collection("admin")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnSuccessListener {
-                    for (document in it) {
-                        val pass = document.getString("password").toString().trim()
-                        if (auth.currentUser != null) {
-                            onLoginAdmin(email = auth.currentUser!!.email.toString(), password = pass)
-                        }
-                        break
-                    }
-                }
-                .addOnFailureListener {
-                    Log.d("AccountFragment", "User is not found")
-                }
-        } catch (e: Exception) {
-            Log.d("AccountFragment", "findUserInFirestore: $e")
-        }
 
+    private fun findUserInFirestore(email: String) {
+        db.collection("admin")
+            .whereEqualTo("email", email)
+            .get()
+            .addOnSuccessListener { documents ->
+                val isAdmin = !documents.isEmpty // Если есть документы, пользователь - админ
+                saveAdminStatus(isAdmin)
+                updateNavUi(isAdmin)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("AccountFragment", "Error finding user in Firestore: ${exception.message}", exception)
+            }
     }
 
-    fun onLoginAdmin(email: String, password: String) {
-        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences.edit()
-
-        if(email == "admin@bk.ru" && password == "adminadmin") {
-            editor.putBoolean("isAdmin", true)
-        }
-        else {
-            editor.putBoolean("isAdmin", false)
-        }
-        editor.apply()
-        updateNavUi()
+    private fun saveAdminStatus(isAdmin: Boolean) {
+        getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+            .edit()
+            .putBoolean("isAdmin", isAdmin)
+            .apply()
     }
 
-    private fun updateNavUi(){
-        val sharedPreferences = getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-        val isAdmin = sharedPreferences.getBoolean("isAdmin", false)
-
+    private fun updateNavUi(isAdmin: Boolean) {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         val menu = bottomNavigationView.menu
 
-        if(isAdmin) {
-            if(menu.findItem(R.id.adminFragment) == null) {
+        if (isAdmin) {
+            if (menu.findItem(R.id.adminFragment) == null) {
                 menu.add(0, R.id.adminFragment, menu.size(), "Admin")
                     .setIcon(R.drawable.baseline_admin_panel_settings_24)
             }
-            else {
-                menu.removeItem(R.id.adminFragment)
-            }
+        } else {
+            menu.removeItem(R.id.adminFragment)
         }
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
-    }
-
-    fun tvClick(view: View) {
-        when (view.id) {
-            R.id.tvCoffee -> {
-                findViewById<TextView>(R.id.titleCoffee).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.titleTea).visibility = View.GONE
-                findViewById<TextView>(R.id.titleDesserts).visibility = View.GONE
-                findViewById<TextView>(R.id.titleSandwiches).visibility = View.GONE
-
-                findViewById<RecyclerView>(R.id.coffeeRecyclerView).visibility = View.VISIBLE
-                findViewById<RecyclerView>(R.id.teaRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.dessertRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.sandwichRecyclerView).visibility = View.GONE
-            }
-            R.id.tvTea -> {
-                findViewById<TextView>(R.id.titleTea).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.titleCoffee).visibility = View.GONE
-                findViewById<TextView>(R.id.titleDesserts).visibility = View.GONE
-                findViewById<TextView>(R.id.titleSandwiches).visibility = View.GONE
-
-                findViewById<RecyclerView>(R.id.teaRecyclerView).visibility = View.VISIBLE
-                findViewById<RecyclerView>(R.id.coffeeRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.dessertRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.sandwichRecyclerView).visibility = View.GONE
-            }
-            R.id.tvDesserts -> {
-                findViewById<TextView>(R.id.titleDesserts).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.titleCoffee).visibility = View.GONE
-                findViewById<TextView>(R.id.titleTea).visibility = View.GONE
-                findViewById<TextView>(R.id.titleSandwiches).visibility = View.GONE
-
-                findViewById<RecyclerView>(R.id.dessertRecyclerView).visibility = View.VISIBLE
-                findViewById<RecyclerView>(R.id.teaRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.sandwichRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.coffeeRecyclerView).visibility = View.GONE
-            }
-            R.id.tvSandwiches ->{
-                findViewById<TextView>(R.id.titleSandwiches).visibility = View.VISIBLE
-                findViewById<TextView>(R.id.titleCoffee).visibility = View.GONE
-                findViewById<TextView>(R.id.titleTea).visibility = View.GONE
-                findViewById<TextView>(R.id.titleDesserts).visibility = View.GONE
-
-                findViewById<RecyclerView>(R.id.sandwichRecyclerView).visibility = View.VISIBLE
-                findViewById<RecyclerView>(R.id.teaRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.dessertRecyclerView).visibility = View.GONE
-                findViewById<RecyclerView>(R.id.coffeeRecyclerView).visibility = View.GONE
-            }
-        }
     }
 
     private fun createNotificationChannel() {
@@ -190,6 +128,71 @@ class MainActivity : AppCompatActivity() {
             mChannel.description = descriptionText
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
+        }
+    }
+
+    private fun setupFirestoreListener() {
+        val db = Firebase.firestore
+
+        val currentUser = FirebaseAuth.getInstance().currentUser?.uid
+
+        if (currentUser == null) {
+            Toast.makeText(this, "Необходимо авторизоваться", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        db.collection("order")
+            .whereEqualTo("user_id", currentUser)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.w("Firestore", "Ошибка получения изменений: ${e.message}")
+                    return@addSnapshotListener
+                }
+
+                for (change in snapshots!!.documentChanges) {
+                    when (change.type) {
+                        DocumentChange.Type.ADDED -> {
+                            //sendNotification("Добавлен новый заказ", "Заказ: ${change.document.getString("orderItems")}")
+                        }
+
+                        DocumentChange.Type.MODIFIED -> {
+                            sendNotification(
+                                "Обновление ззаказа",
+                                "${change.document.getString("status")}"
+                            )
+                        }
+
+                        DocumentChange.Type.REMOVED -> {
+                            //sendNotification("Удален заказ", "Удаленный заказ: ${change.document.getString("orderItems")}")
+                        }
+                    }
+                }
+            }
+    }
+
+    private fun sendNotification(title: String, message: String) {
+        val builder = NotificationCompat.Builder(this@MainActivity, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher) // Иконка уведомления
+            .setContentTitle(title)
+            .setContentText(message)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+
+        with(NotificationManagerCompat.from(this@MainActivity)) {
+            if (ActivityCompat.checkSelfPermission(
+                    this@MainActivity,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                notify(System.currentTimeMillis().toInt(), builder.build())
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    ActivityCompat.requestPermissions(
+                        this@MainActivity,
+                        arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                        1
+                    )
+                }
+            }
         }
     }
 }

@@ -26,7 +26,7 @@
     <string name="settings">Настройки</string>
     <string name="get_help">Поддержка</string>
     <string name="about_us">О Нас</string>
-    <string name="call_us_n_8_800_555_35_35" tools:ignore="TypographyDashes">Позвоните нам \n 8–800-555-35-35</string>
+    <string name="call_us_n_8_800_555_35_35" tools:ignore="TypographyDashes">Позвоните нам \n 8–928-471-21-33</string>
     <string name="email_us_n_savevibe_gmail_com">Напишите нам \n savevibe@gmail.com</string>
     <string name="notifications">Уведомления</string>
     <string name="account_management">Настройки аккаунта</string>
@@ -39,7 +39,21 @@
     <string name="users_management">Администраторы</string>
     <string name="add_new_item">Добавить новую позицию</string>
     <string name="remove_item">Убрать позицию</string>
-    <string name="enter_item_name">Enter item name</string>
-    <string name="enter_item_category">Enter item category</string>
-    <string name="enter_item_price">Enter item price</string>
+    <string name="enter_item_name">Введите название позиции</string>
+    <string name="enter_item_category">Введите название категории</string>
+    <string name="enter_item_price">Введите цену позиции</string>
+    <string name="order_create">Заказ создан, ожидайте! \Всего: </string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="change_your_name">Изменить ваше имя</string>
+    <string name="change_your_password">Изменить ваш пароль</string>
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="add_new_admin">Добавить нового администратора</string>
+    <string name="enter_admin_name">Введите имя администратора</string>
+    <string name="enter_admin_email">Введите почту администратора</string>
+    <string name="password_reset_email_sent">Ссылка для сброса отправлена</string>
+    <string name="you_are_registered">Вы зарегистрированы!</string>
+    <string name="email_already_exists">Такая почта уже зарегистрирована!</string>
+    <string name="authentication_failed">Ошибка регистрации!</string>
+    <string name="email_is_too_short_minimum_length_is_8">Пароль слишком короткий!, минимальная длинна 8</string>
 </resources>

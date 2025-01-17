@@ -1,6 +1,5 @@
 package com.example.coffeevibe
 
-import android.view.Menu
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -14,8 +13,9 @@ class OrderViewModel : ViewModel() {
         return buttonStates
     }
 
+
     fun addToOrder(item: MenuItem){
-        val currentOrderItem = orderItem.value ?: ArrayList<MenuItem>()
+        val currentOrderItem = orderItem.value ?: ArrayList()
         currentOrderItem.add(item)
         orderItem.value = currentOrderItem
         buttonStates.add(true)
@@ -29,8 +29,8 @@ class OrderViewModel : ViewModel() {
     fun deleteFromOrder(item: MenuItem){
         val currItem = orderItem.value ?: ArrayList<MenuItem>()
         val index = currItem.indexOf(item)
-        if (index != -1){
-            currItem.removeAt(index)
+        if (currItem.contains(item)){
+            currItem.remove(item)
             orderItem.value = currItem
             buttonStates.removeAt(index)
         }
@@ -45,13 +45,6 @@ class OrderViewModel : ViewModel() {
         return totalSum
     }
 
-    fun extractPrice(priceStr: String) : Int{
-        val regex = "\\d+".toRegex()
-
-        val matchResult = regex.find(priceStr)
-        return matchResult?.value?.toInt() ?: 0
-    }
-
     fun updateItem(item: MenuItem){
         val currList = orderItem.value ?: return
         val index = currList.indexOfFirst { it.name == item.name }
@@ -61,7 +54,4 @@ class OrderViewModel : ViewModel() {
             orderItem.value = currList.toMutableList()
         }
     }
-
-
-
 }

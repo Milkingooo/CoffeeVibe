@@ -46,7 +46,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/cancelBtn"
             style="@style/ButtonAccount"
-            android:text="Cancel"
+            android:text="@string/cancel"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_marginBottom="0dp"
@@ -55,7 +55,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/saveBtn"
             style="@style/ButtonAccount"
-            android:text="Save"
+            android:text="@string/save"
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:layout_marginBottom="0dp"/>

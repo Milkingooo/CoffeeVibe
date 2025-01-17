@@ -7,7 +7,7 @@ data class AddItem(
     val name: String,
     val category: String,
     val price: Int,
-    val id: String= ""
+    val id: String= "",
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(

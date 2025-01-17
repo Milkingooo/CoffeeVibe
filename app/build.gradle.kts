@@ -40,6 +40,14 @@ android {
         viewBinding = true
     }
 
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            merges += "META-INF/LICENSE.md"
+            merges += "META-INF/LICENSE-notice.md"
+        }
+    }
+
 }
 
 dependencies {
@@ -62,7 +70,16 @@ dependencies {
     implementation(libs.firebase.storage.ktx)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.preference)
+    implementation(libs.robolectric)
+    implementation(libs.core)
+    implementation(libs.androidx.junit.ktx)
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.junit)
+    implementation(libs.mockk)
     testImplementation(libs.junit)
+    testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
