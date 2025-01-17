@@ -72,6 +72,9 @@ class OrderFragment : Fragment(R.layout.fragment_order) {
         view.findViewById<Button>(R.id.orderButton).setOnClickListener {
             //getNotify()
             createOrder()
+            orderVm.orderItem.value?.clear()
+            orderAdapter.updateList(ArrayList())
+            totalSumTv.text = "0 руб."
         }
     }
 

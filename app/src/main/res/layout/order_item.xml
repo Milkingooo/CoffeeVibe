@@ -23,30 +23,32 @@
         android:id="@+id/imageButtonMinus"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="320dp"
+        android:layout_marginStart="100dp"
         android:layout_marginTop="44dp"
+        android:layout_weight="1"
         android:background="#00FFFFFF"
-        android:contentDescription="TODO"
-        android:src="@drawable/baseline_remove_circle_24"
+        android:contentDescription="sd"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        android:src="@drawable/baseline_remove_circle_24"
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"
+         />
 
     <ImageButton
         android:id="@+id/imageButtonPlus"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginStart="100dp"
+        android:layout_marginStart="320dp"
         android:layout_marginTop="44dp"
-        android:layout_weight="1"
         android:background="#00FFFFFF"
+        android:contentDescription="TODO"
+        app:srcCompat="@drawable/baseline_add_circle_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_add_circle_24"
-        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck"/>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/orderItemImg"
@@ -101,8 +103,8 @@
         android:text="1"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/imageButtonMinus"
-        app:layout_constraintStart_toEndOf="@+id/imageButtonPlus"
+        app:layout_constraintEnd_toStartOf="@+id/imageButtonPlus"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonMinus"
         app:layout_constraintTop_toTopOf="parent" />
 
 

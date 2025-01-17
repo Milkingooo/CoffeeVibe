@@ -108,4 +108,9 @@ class OrderAdapter(private val items: MutableList<MenuItem>, val onItemQuantityC
         return matchResult?.value?.toInt() ?: 0
     }
 
+    fun clear(){
+        items.clear()
+        notifyDataSetChanged()
+    }
+
 }
